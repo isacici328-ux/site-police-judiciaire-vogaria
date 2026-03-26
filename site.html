@@ -1,0 +1,1193 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Police Judiciaire — Système d'Information Vogaria</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,400&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#04080f;--bg2:#070e1c;--bg3:#0b1628;--bg4:#0f1e35;--bg5:#132440;
+  --border:rgba(255,255,255,0.07);--border2:rgba(255,255,255,0.12);--border3:rgba(255,255,255,0.18);
+  --gold:#c9a84c;--gold2:#e8c96a;--gold3:rgba(201,168,76,0.15);--gold4:rgba(201,168,76,0.08);
+  --blue:#1a56db;--blue2:#3b82f6;--blue3:rgba(59,130,246,0.15);
+  --red:#dc2626;--red2:#ef4444;--red3:rgba(220,38,38,0.15);
+  --green:#16a34a;--green2:#22c55e;--green3:rgba(22,197,94,0.12);
+  --amber:#d97706;--amber2:#f59e0b;--amber3:rgba(217,119,6,0.15);
+  --purple:#7c3aed;--purple2:#8b5cf6;--purple3:rgba(139,92,246,0.15);
+  --text:#e8edf5;--text2:#8fa3be;--text3:#4a6080;--text4:#2d4060;
+  --r:10px;--r2:14px;--r3:20px;--shadow:0 8px 32px rgba(0,0,0,0.4);
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+html,body{height:100%;font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);overflow:hidden;}
+::-webkit-scrollbar{width:4px;height:4px;}
+::-webkit-scrollbar-track{background:transparent;}
+::-webkit-scrollbar-thumb{background:rgba(255,255,255,0.12);border-radius:2px;}
+::-webkit-scrollbar-thumb:hover{background:rgba(255,255,255,0.2);}
+
+/* ── LOGIN ─────────────────────────────────────────── */
+#login{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;background:var(--bg);z-index:2000;background-image:radial-gradient(ellipse at 30% 50%,rgba(26,86,219,0.08) 0%,transparent 60%),radial-gradient(ellipse at 70% 20%,rgba(201,168,76,0.06) 0%,transparent 50%);}
+.login-wrap{position:relative;width:100%;max-width:440px;padding:20px;}
+.login-glow{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:600px;height:600px;background:radial-gradient(circle,rgba(26,86,219,0.1) 0%,transparent 65%);pointer-events:none;}
+.login-card{position:relative;background:var(--bg3);border:1px solid rgba(201,168,76,0.25);border-radius:24px;padding:44px;box-shadow:0 40px 80px rgba(0,0,0,0.7),inset 0 1px 0 rgba(255,255,255,0.05);}
+.login-seal{width:80px;height:80px;background:linear-gradient(135deg,#c9a84c 0%,#7a5a10 100%);border-radius:50%;margin:0 auto 22px;display:flex;align-items:center;justify-content:center;font-family:'Syne',sans-serif;font-size:28px;font-weight:800;color:#fff;border:2px solid rgba(201,168,76,0.4);box-shadow:0 0 40px rgba(201,168,76,0.25),inset 0 2px 0 rgba(255,255,255,0.15);}
+.login-title{font-family:'Syne',sans-serif;font-size:21px;font-weight:700;text-align:center;color:var(--gold);letter-spacing:0.3px;}
+.login-sub{font-size:11px;color:var(--text3);text-align:center;letter-spacing:2.5px;text-transform:uppercase;margin:6px 0 32px;}
+.lfield{margin-bottom:16px;}
+.lfield label{display:block;font-size:10px;color:var(--text2);text-transform:uppercase;letter-spacing:1.5px;margin-bottom:7px;font-weight:500;}
+.lfield input{width:100%;background:rgba(255,255,255,0.04);border:1px solid var(--border2);border-radius:10px;padding:12px 16px;color:var(--text);font-family:'DM Sans',sans-serif;font-size:14px;transition:all .2s;outline:none;}
+.lfield input:focus{border-color:var(--blue2);box-shadow:0 0 0 3px rgba(59,130,246,0.12);}
+.lfield input::placeholder{color:var(--text4);}
+.lbtn{width:100%;padding:14px;background:linear-gradient(135deg,var(--blue),#1e40af);border:none;border-radius:10px;color:#fff;font-family:'Syne',sans-serif;font-size:13px;font-weight:700;letter-spacing:.5px;cursor:pointer;margin-top:8px;transition:all .25s;position:relative;overflow:hidden;}
+.lbtn::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(255,255,255,0.1),transparent);opacity:0;transition:.2s;}
+.lbtn:hover::before{opacity:1;}
+.lbtn:hover{box-shadow:0 0 30px rgba(59,130,246,0.4),0 8px 20px rgba(0,0,0,0.3);}
+.lbtn:active{transform:scale(0.99);}
+.lerr{background:var(--red3);border:1px solid rgba(220,38,38,0.4);border-radius:9px;padding:10px 14px;font-size:12px;color:#fca5a5;margin-bottom:14px;display:none;animation:shake .3s ease;}
+@keyframes shake{0%,100%{transform:translateX(0);}25%{transform:translateX(-4px);}75%{transform:translateX(4px);}};
+.lhint{font-size:10px;color:var(--text4);text-align:center;margin-top:18px;line-height:1.8;}
+.autofill-hint{font-size:10px;color:var(--text3);text-align:center;margin-top:12px;cursor:pointer;padding:8px;border:1px dashed var(--border);border-radius:8px;transition:.2s;}
+.autofill-hint:hover{border-color:var(--border2);color:var(--text2);}
+.saved-creds{display:none;margin-bottom:16px;}
+.saved-creds.show{display:block;}
+.saved-creds-item{display:flex;align-items:center;gap:10px;padding:9px 12px;background:var(--bg4);border:1px solid var(--border);border-radius:9px;cursor:pointer;margin-bottom:6px;transition:.15s;}
+.saved-creds-item:hover{background:var(--bg5);border-color:var(--border2);}
+.sci-av{width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;}
+.sci-info{flex:1;}
+.sci-name{font-size:12px;font-weight:500;}
+.sci-role{font-size:10px;color:var(--text3);}
+
+/* ── APP ─────────────────────────────────────────── */
+#app{display:none;height:100vh;flex-direction:column;}
+#app.on{display:flex;}
+
+.topbar{height:54px;background:rgba(4,8,15,0.97);border-bottom:1px solid var(--border);display:flex;align-items:center;padding:0 22px;gap:16px;flex-shrink:0;backdrop-filter:blur(20px);position:sticky;top:0;z-index:100;}
+.topbar-logo{font-family:'Syne',sans-serif;font-size:14px;font-weight:800;color:var(--gold);letter-spacing:.5px;white-space:nowrap;display:flex;align-items:center;gap:8px;}
+.topbar-sep{width:1px;height:20px;background:var(--border);}
+.topbar-page{font-size:12px;color:var(--text2);flex:1;}
+.topbar-right{display:flex;align-items:center;gap:8px;}
+.notif-btn{width:34px;height:34px;background:var(--bg4);border:1px solid var(--border);border-radius:8px;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:14px;position:relative;transition:.15s;}
+.notif-btn:hover{background:var(--bg5);border-color:var(--border2);}
+.notif-dot{position:absolute;top:5px;right:5px;width:7px;height:7px;background:var(--red2);border-radius:50%;border:1.5px solid var(--bg);animation:pulse 2s infinite;}
+@keyframes pulse{0%,100%{opacity:1;}50%{opacity:.5;}}
+.user-chip{display:flex;align-items:center;gap:9px;background:var(--bg4);border:1px solid var(--border);border-radius:24px;padding:4px 14px 4px 6px;cursor:pointer;transition:.15s;}
+.user-chip:hover{background:var(--bg5);border-color:var(--border2);}
+.chip-av{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;flex-shrink:0;}
+.chip-name{font-size:12px;font-weight:500;}
+.chip-role{font-size:10px;color:var(--text2);}
+
+.app-body{display:flex;flex:1;overflow:hidden;}
+.sidebar{width:224px;background:var(--bg2);border-right:1px solid var(--border);display:flex;flex-direction:column;flex-shrink:0;overflow-y:auto;}
+.sb-section{padding:16px 10px 8px;}
+.sb-lbl{font-size:9px;color:var(--text4);text-transform:uppercase;letter-spacing:2.5px;padding:0 8px 8px;font-weight:600;}
+.sb-item{display:flex;align-items:center;gap:9px;padding:8px 10px;border-radius:9px;cursor:pointer;font-size:12.5px;color:var(--text2);transition:all .15s;margin-bottom:1px;border:1px solid transparent;}
+.sb-item:hover{background:rgba(255,255,255,0.04);color:var(--text);}
+.sb-item.on{background:var(--blue3);color:var(--text);border-color:rgba(59,130,246,0.2);}
+.sb-item.on .sb-ic{color:var(--blue2);}
+.sb-ic{font-size:14px;width:18px;text-align:center;flex-shrink:0;}
+.sb-badge{margin-left:auto;background:var(--red3);color:var(--red2);font-size:9px;font-weight:700;padding:2px 6px;border-radius:6px;min-width:18px;text-align:center;}
+.sb-bottom{margin-top:auto;padding:12px 10px;border-top:1px solid var(--border);}
+.logout-btn{display:flex;align-items:center;gap:9px;padding:8px 10px;border-radius:9px;cursor:pointer;font-size:12.5px;color:var(--red2);transition:.15s;}
+.logout-btn:hover{background:var(--red3);}
+
+.content{flex:1;overflow-y:auto;padding:24px;}
+.page{display:none;animation:fadein .2s ease;}
+.page.on{display:block;}
+@keyframes fadein{from{opacity:0;transform:translateY(4px);}to{opacity:1;transform:none;}}
+
+/* ── CARDS ─────────────────────────────────────────── */
+.card{background:var(--bg3);border:1px solid var(--border);border-radius:var(--r2);padding:20px;margin-bottom:18px;}
+.card-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;padding-bottom:14px;border-bottom:1px solid var(--border);}
+.card-title{font-family:'Syne',sans-serif;font-size:14px;font-weight:600;color:var(--gold);display:flex;align-items:center;gap:8px;}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
+.g3{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;}
+.g4{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;}
+.g5{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;}
+.stat{background:var(--bg4);border:1px solid var(--border);border-radius:var(--r);padding:16px;text-align:center;transition:.2s;}
+.stat:hover{border-color:var(--border2);}
+.stat-n{font-family:'Syne',sans-serif;font-size:30px;font-weight:700;color:var(--gold);}
+.stat-l{font-size:10px;color:var(--text2);text-transform:uppercase;letter-spacing:1.5px;margin-top:4px;}
+.bdg{display:inline-block;padding:3px 9px;border-radius:20px;font-size:10px;font-weight:700;letter-spacing:.3px;}
+.b-blue{background:var(--blue3);color:var(--blue2);}
+.b-green{background:var(--green3);color:var(--green2);}
+.b-red{background:var(--red3);color:var(--red2);}
+.b-gold{background:var(--gold3);color:var(--gold2);}
+.b-amber{background:var(--amber3);color:var(--amber2);}
+.b-gray{background:rgba(100,116,139,0.15);color:#94a3b8;}
+.b-purple{background:var(--purple3);color:var(--purple2);}
+.btn{padding:7px 15px;border-radius:8px;font-size:12px;cursor:pointer;font-family:'DM Sans',sans-serif;border:none;font-weight:500;transition:all .2s;display:inline-flex;align-items:center;gap:5px;}
+.btn-p{background:var(--blue);color:#fff;}.btn-p:hover{background:#1e40af;box-shadow:0 0 16px rgba(59,130,246,0.3);}
+.btn-o{background:transparent;color:var(--text2);border:1px solid var(--border2);}.btn-o:hover{background:rgba(255,255,255,0.05);color:var(--text);}
+.btn-d{background:var(--red);color:#fff;}.btn-d:hover{background:#b91c1c;box-shadow:0 0 16px rgba(220,38,38,0.3);}
+.btn-s{background:var(--green);color:#fff;}.btn-s:hover{background:#15803d;}
+.btn-g{background:linear-gradient(135deg,var(--gold),#a07830);color:#000;font-weight:700;}.btn-g:hover{box-shadow:0 0 20px rgba(201,168,76,0.4);}
+.btn-amber{background:var(--amber);color:#fff;}.btn-amber:hover{background:#b45309;}
+.btn-sm{padding:4px 10px;font-size:11px;}
+.fg{margin-bottom:14px;}
+.fg label{font-size:10px;color:var(--text2);text-transform:uppercase;letter-spacing:1px;display:block;margin-bottom:6px;font-weight:500;}
+.fg input,.fg select,.fg textarea{width:100%;background:rgba(255,255,255,0.03);border:1px solid var(--border2);border-radius:9px;padding:10px 13px;color:var(--text);font-family:'DM Sans',sans-serif;font-size:13px;transition:all .2s;outline:none;}
+.fg input:focus,.fg select:focus,.fg textarea:focus{border-color:var(--blue2);box-shadow:0 0 0 3px rgba(59,130,246,0.1);}
+.fg textarea{resize:vertical;min-height:72px;}
+.fg select option{background:#0b1628;}
+
+/* ── TABLES ─────────────────────────────────────────── */
+.tbl-wrap{overflow-x:auto;}
+table{width:100%;border-collapse:collapse;font-size:12px;}
+th{padding:9px 13px;text-align:left;font-size:9px;color:var(--text3);text-transform:uppercase;letter-spacing:1px;border-bottom:1px solid var(--border);font-weight:600;white-space:nowrap;}
+td{padding:10px 13px;border-bottom:1px solid rgba(255,255,255,0.03);color:var(--text2);vertical-align:middle;}
+tr:hover td{background:rgba(255,255,255,0.015);}
+tr:last-child td{border-bottom:none;}
+.td-name{color:var(--text);font-weight:500;}
+
+/* ── ALERTS ─────────────────────────────────────────── */
+.alert{padding:10px 14px;border-radius:9px;font-size:12px;margin-bottom:14px;border-left:2px solid;line-height:1.5;}
+.a-i{background:var(--blue3);border-color:var(--blue2);color:#93c5fd;}
+.a-d{background:var(--red3);border-color:var(--red2);color:#fca5a5;}
+.a-s{background:var(--green3);border-color:var(--green2);color:#86efac;}
+.a-g{background:var(--gold3);border-color:var(--gold);color:var(--gold2);}
+.a-w{background:var(--amber3);border-color:var(--amber2);color:#fcd34d;}
+.a-p{background:var(--purple3);border-color:var(--purple2);color:#c4b5fd;}
+
+/* ── MODALS ─────────────────────────────────────────── */
+.modal-bg{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.85);z-index:1000;align-items:center;justify-content:center;backdrop-filter:blur(6px);}
+.modal-bg.on{display:flex;animation:fadein .15s ease;}
+.modal{background:var(--bg3);border:1px solid var(--border2);border-radius:20px;padding:28px;max-width:540px;width:93%;max-height:88vh;overflow-y:auto;box-shadow:var(--shadow);}
+.modal h3{font-family:'Syne',sans-serif;font-size:17px;font-weight:700;color:var(--gold);margin-bottom:18px;display:flex;align-items:center;gap:8px;}
+.mclose{float:right;background:none;border:none;color:var(--text2);font-size:18px;cursor:pointer;line-height:1;padding:2px 6px;border-radius:6px;transition:.15s;}
+.mclose:hover{background:var(--red3);color:var(--red2);}
+
+/* ── GAV ─────────────────────────────────────────── */
+.gav-card{background:var(--bg4);border:1px solid var(--border);border-radius:var(--r);padding:15px;margin-bottom:10px;transition:.2s;}
+.gav-card:hover{border-color:var(--border2);}
+.gav-timer{font-family:'DM Mono',monospace;font-size:24px;font-weight:500;}
+.tbar{height:4px;background:rgba(255,255,255,0.07);border-radius:2px;margin-top:10px;overflow:hidden;}
+.tfill{height:100%;border-radius:2px;transition:width 1s linear,background .5s;}
+
+/* ── CREDENTIALS CARD ─────────────────────────────── */
+.cred{background:rgba(0,0,0,0.3);border:1px solid rgba(201,168,76,0.25);border-radius:10px;padding:14px 16px;font-family:'DM Mono',monospace;font-size:11.5px;color:var(--gold2);margin:10px 0;}
+.cr{display:flex;justify-content:space-between;padding:3px 0;align-items:center;}
+.ck{color:var(--text3);}
+.cval{color:var(--gold2);font-weight:500;}
+
+/* ── MAP ─────────────────────────────────────────── */
+#erlc-map-wrap{position:relative;border-radius:var(--r);overflow:hidden;border:1px solid var(--border);background:#0a1520;}
+#erlc-img{width:100%;display:block;opacity:0.88;}
+.map-legend{display:flex;gap:16px;flex-wrap:wrap;margin-top:12px;font-size:11px;color:var(--text2);}
+.map-legend-item{display:flex;align-items:center;gap:6px;}
+.map-legend-dot{width:10px;height:10px;border-radius:50%;}
+
+/* ── AMENDE PAGE ─────────────────────────────────── */
+.amende-row{display:flex;align-items:center;gap:10px;padding:10px 13px;border-bottom:1px solid rgba(255,255,255,0.03);}
+.amende-row:last-child{border-bottom:none;}
+.amende-row:hover{background:rgba(255,255,255,0.02);}
+.amende-name{flex:1;font-size:12.5px;color:var(--text);}
+.amende-art{font-size:11px;color:var(--text3);font-family:'DM Mono',monospace;width:140px;flex-shrink:0;}
+.amende-prix{font-family:'DM Mono',monospace;font-size:12px;font-weight:600;width:90px;text-align:right;flex-shrink:0;}
+.amende-prix.juge{color:var(--amber2);}
+.amende-prix.fixed{color:var(--green2);}
+.qual-crime{background:rgba(139,92,246,0.15);color:#c4b5fd;padding:2px 8px;border-radius:5px;font-size:9px;font-weight:700;letter-spacing:.5px;}
+.qual-delit{background:rgba(220,38,38,0.15);color:#fca5a5;padding:2px 8px;border-radius:5px;font-size:9px;font-weight:700;letter-spacing:.5px;}
+.qual-contra{background:rgba(22,197,94,0.12);color:#86efac;padding:2px 8px;border-radius:5px;font-size:9px;font-weight:700;letter-spacing:.5px;}
+.amende-search{background:var(--bg3);border:1px solid var(--border2);border-radius:10px;padding:10px 15px;color:var(--text);font-family:'DM Sans',sans-serif;font-size:13px;width:100%;outline:none;margin-bottom:16px;}
+.amende-search:focus{border-color:var(--blue2);}
+.amende-filter-btns{display:flex;gap:6px;margin-bottom:16px;flex-wrap:wrap;}
+
+/* ── AGENT CARD ─────────────────────────────────── */
+.agent-card{display:flex;align-items:center;gap:13px;padding:12px 14px;background:var(--bg4);border:1px solid var(--border);border-radius:var(--r);margin-bottom:9px;transition:.15s;}
+.agent-card:hover{border-color:var(--border2);}
+.agent-av{width:40px;height:40px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;flex-shrink:0;}
+
+/* ── CASIER ─────────────────────────────────────── */
+.casier-card{background:var(--bg4);border:1px solid var(--border);border-radius:var(--r);padding:15px;margin-bottom:10px;}
+.casier-head{display:flex;justify-content:space-between;align-items:flex-start;}
+.casier-name{font-family:'Syne',sans-serif;font-size:14px;font-weight:600;}
+.casier-entry{background:rgba(255,255,255,0.02);border-left:3px solid var(--border2);padding:8px 11px;margin-top:9px;font-size:11.5px;color:var(--text2);border-radius:0 7px 7px 0;}
+.casier-entry.grave{border-color:var(--red2);}
+.casier-entry.moyen{border-color:var(--amber2);}
+.casier-entry.leger{border-color:var(--blue2);}
+
+/* ── LOG ROWS ─────────────────────────────────── */
+.log-success td:nth-child(5){color:var(--green2);}
+.log-fail td:nth-child(5){color:var(--red2);}
+</style>
+</head>
+<body>
+
+<!-- ══════════════════════════════ LOGIN ══════════════════════════════ -->
+<div id="login">
+  <div class="login-wrap">
+    <div class="login-glow"></div>
+    <div class="login-card">
+      <div class="login-seal">⚖️</div>
+      <div class="login-title">Police Judiciaire — Vogaria</div>
+      <div class="login-sub">Système d'information sécurisé</div>
+
+      <div class="saved-creds" id="saved-creds-list">
+        <div style="font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:1.5px;margin-bottom:8px;">Connexions enregistrées</div>
+        <div id="saved-creds-items"></div>
+        <div style="height:1px;background:var(--border);margin:14px 0 14px;"></div>
+      </div>
+
+      <div class="lerr" id="lerr">❌ Identifiant ou mot de passe incorrect.</div>
+      <div class="lfield"><label>Identifiant</label><input id="l-id" placeholder="Votre identifiant" autocomplete="off" spellcheck="false"></div>
+      <div class="lfield"><label>Mot de passe</label><input type="password" id="l-pw" placeholder="••••••••" autocomplete="current-password"></div>
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:14px;">
+        <input type="checkbox" id="save-creds" style="width:auto;margin:0;" checked>
+        <label for="save-creds" style="font-size:11px;color:var(--text2);cursor:pointer;text-transform:none;letter-spacing:0;">Se souvenir de moi</label>
+      </div>
+      <button class="lbtn" onclick="doLogin()">🔐 Accéder au système</button>
+      <div class="lhint">Accès strictement réservé au personnel assermenté.<br>Toute tentative d'intrusion est tracée et sanctionnée.</div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════ APP ══════════════════════════════ -->
+<div id="app">
+  <div class="topbar">
+    <div class="topbar-logo">⚖️ PJ — VOGARIA</div>
+    <div class="topbar-sep"></div>
+    <div class="topbar-page" id="t-page">Tableau de bord</div>
+    <div class="topbar-right">
+      <div class="notif-btn" onclick="gp('logs')" title="Logs système"><span>📋</span><span class="notif-dot" id="notif-dot" style="display:none"></span></div>
+      <div class="user-chip" onclick="gp('profil')">
+        <div class="chip-av" id="t-av"></div>
+        <div><div class="chip-name" id="t-name">—</div><div class="chip-role" id="t-role">—</div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="app-body">
+    <nav class="sidebar">
+      <div class="sb-section">
+        <div class="sb-lbl">Général</div>
+        <div class="sb-item on" onclick="gp('dash')"><span class="sb-ic">🏠</span>Tableau de bord</div>
+        <div class="sb-item" onclick="gp('carte')"><span class="sb-ic">🗺️</span>Carte Vogaria</div>
+        <div class="sb-item" onclick="gp('amendes')"><span class="sb-ic">💰</span>Barème des amendes</div>
+      </div>
+      <div class="sb-section">
+        <div class="sb-lbl">Procédures</div>
+        <div class="sb-item" onclick="gp('gav')"><span class="sb-ic">🔒</span>Gardes à Vue</div>
+        <div class="sb-item" onclick="gp('rapports')"><span class="sb-ic">📋</span>Rapports</div>
+        <div class="sb-item" onclick="gp('parquet')"><span class="sb-ic">⚖️</span>Parquet</div>
+        <div class="sb-item" onclick="gp('casier')"><span class="sb-ic">🗂️</span>Casier Judiciaire</div>
+        <div class="sb-item" onclick="gp('pv')"><span class="sb-ic">📄</span>PV & Amendes</div>
+      </div>
+      <div class="sb-section" id="sb-admin">
+        <div class="sb-lbl">Administration</div>
+        <div class="sb-item" onclick="gp('agents')"><span class="sb-ic">🪪</span>Agents</div>
+        <div class="sb-item" onclick="gp('logs')"><span class="sb-ic">📊</span>Logs connexion</div>
+      </div>
+      <div class="sb-bottom">
+        <div class="logout-btn" onclick="doLogout()"><span>🚪</span>Déconnexion</div>
+      </div>
+    </nav>
+
+    <div class="content">
+
+      <!-- ── DASHBOARD ─────────────────────────────────────────── -->
+      <div id="pg-dash" class="page on">
+        <div class="g5" style="margin-bottom:18px;">
+          <div class="stat"><div class="stat-n" id="s-gav">0</div><div class="stat-l">GAV actives</div></div>
+          <div class="stat"><div class="stat-n" id="s-rap">0</div><div class="stat-l">Rapports</div></div>
+          <div class="stat"><div class="stat-n" id="s-pv">0</div><div class="stat-l">PV émis</div></div>
+          <div class="stat"><div class="stat-n" id="s-agents">0</div><div class="stat-l">Agents</div></div>
+          <div class="stat"><div class="stat-n" id="s-casier">0</div><div class="stat-l">Casiers</div></div>
+        </div>
+        <div class="g2">
+          <div class="card">
+            <div class="card-head"><span class="card-title">🔔 Activité récente</span></div>
+            <div id="dash-act" style="font-size:12px;color:var(--text2);"><div style="padding:8px 0;color:var(--text3)">Aucune activité</div></div>
+          </div>
+          <div class="card">
+            <div class="card-head"><span class="card-title">🔒 GAV en cours</span></div>
+            <div id="dash-gav"><div class="alert a-i">Aucune GAV active.</div></div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-head"><span class="card-title">⚡ Accès rapide</span></div>
+          <div style="display:flex;flex-wrap:wrap;gap:8px;">
+            <button class="btn btn-d" onclick="om('m-gav')">🔒 Ouvrir GAV</button>
+            <button class="btn btn-p" onclick="om('m-rapport')">📋 Nouveau rapport</button>
+            <button class="btn btn-amber" onclick="om('m-pv')">📄 Émettre PV</button>
+            <button class="btn btn-o" onclick="gp('parquet')">⚖️ Saisir Parquet</button>
+            <button class="btn btn-o" onclick="om('m-casier')">🗂️ Casier judiciaire</button>
+            <button class="btn btn-g" id="btn-agent" onclick="om('m-add-agent')">➕ Créer agent</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── CARTE ─────────────────────────────────────────── -->
+      <div id="pg-carte" class="page">
+        <div class="card">
+          <div class="card-head">
+            <span class="card-title">🗺️ Carte Vogaria — Incidents actifs</span>
+            <button class="btn btn-p btn-sm" onclick="om('m-incident')">📍 Signaler</button>
+          </div>
+          <div id="erlc-map-wrap">
+            <img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTA4MCIgaGVpZ2h0PSI2MDciIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PHJlY3Qgd2lkdGg9IjEwODAiIGhlaWdodD0iNjA3IiBmaWxsPSIjMGExNTIwIi8+PHRleHQgeD0iNTQwIiB5PSIzMDAiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZpbGw9IiMyZDQwNjAiIGZvbnQtc2l6ZT0iMjAiIGZvbnQtZmFtaWx5PSJzYW5zLXNlcmlmIj5DYXJ0ZSBWb2dhcmlhIC0gQ2hhcmdlciB1bmUgaW1hZ2UgZGUgY2FydGU8L3RleHQ+PC9zdmc+" id="erlc-img" alt="Carte ERLC Vogaria">
+            <svg id="map-svg" viewBox="0 0 1080 607" xmlns="http://www.w3.org/2000/svg" style="position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none;"><g id="svg-incidents"></g></svg>
+          </div>
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-top:12px;">
+            <div class="map-legend">
+              <div class="map-legend-item"><div class="map-legend-dot" style="background:#ef4444"></div>Grave</div>
+              <div class="map-legend-item"><div class="map-legend-dot" style="background:#f59e0b"></div>Moyen</div>
+              <div class="map-legend-item"><div class="map-legend-dot" style="background:#3b82f6"></div>Patrouille</div>
+              <div class="map-legend-item"><div class="map-legend-dot" style="background:#22c55e"></div>Résolu</div>
+            </div>
+            <button class="btn btn-o btn-sm" onclick="clearIncidents()">🗑️ Effacer tout</button>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-head"><span class="card-title">📍 Liste des incidents</span></div>
+          <div class="tbl-wrap">
+          <table><thead><tr><th>Lieu</th><th>Type</th><th>Agent</th><th>Heure</th><th>Statut</th><th>Actions</th></tr></thead>
+          <tbody id="inc-table"><tr><td colspan="6" style="text-align:center;color:var(--text3);padding:20px">Aucun incident signalé</td></tr></tbody></table>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── AMENDES ─────────────────────────────────────────── -->
+      <div id="pg-amendes" class="page">
+        <div class="card">
+          <div class="card-head"><span class="card-title">💰 Barème officiel des amendes — Vogaria</span></div>
+          <input class="amende-search" id="amende-q" placeholder="🔍  Rechercher une infraction..." oninput="filterAmendes()">
+          <div class="amende-filter-btns">
+            <button class="btn btn-sm" onclick="filterAmendesCat('')" id="flt-all" style="background:var(--gold3);color:var(--gold2);border:1px solid rgba(201,168,76,0.3);">Toutes</button>
+            <button class="btn btn-sm btn-o" onclick="filterAmendesCat('Crime')" id="flt-crime">🟣 Crimes</button>
+            <button class="btn btn-sm btn-o" onclick="filterAmendesCat('Délit')" id="flt-delit">🔴 Délits</button>
+            <button class="btn btn-sm btn-o" onclick="filterAmendesCat('Contravention')" id="flt-contra">🟢 Contraventions</button>
+          </div>
+          <div id="amendes-list"></div>
+        </div>
+      </div>
+
+      <!-- ── GAV ─────────────────────────────────────────── -->
+      <div id="pg-gav" class="page">
+        <div style="display:flex;gap:8px;margin-bottom:16px;">
+          <button class="btn btn-d" onclick="om('m-gav')">🔒 Ouvrir une GAV</button>
+        </div>
+        <div class="card"><div class="card-head"><span class="card-title">🔒 GAV actives</span></div><div id="gav-list"><div class="alert a-i">Aucune GAV active.</div></div></div>
+        <div class="card"><div class="card-head"><span class="card-title">📋 Historique GAV</span></div>
+          <div class="tbl-wrap">
+          <table><thead><tr><th>Gardé</th><th>Officier</th><th>Motif</th><th>Durée</th><th>Issue</th><th>Date</th><th id="gav-hist-del-th" style="display:none">Suppr.</th></tr></thead>
+          <tbody id="gav-hist"></tbody></table></div></div>
+      </div>
+
+      <!-- ── RAPPORTS ─────────────────────────────────────────── -->
+      <div id="pg-rapports" class="page">
+        <div style="display:flex;gap:8px;margin-bottom:16px;">
+          <button class="btn btn-p" onclick="om('m-rapport')">📋 Nouveau rapport</button>
+        </div>
+        <div class="card"><div class="card-head"><span class="card-title">📋 Rapports d'intervention</span></div>
+          <div class="tbl-wrap">
+          <table><thead><tr><th>#</th><th>Type</th><th>Titre</th><th>Agent</th><th>Date</th><th>Statut</th><th>Actions</th></tr></thead>
+          <tbody id="rap-table"><tr><td colspan="7" style="text-align:center;color:var(--text3);padding:20px">Aucun rapport</td></tr></tbody></table>
+          </div></div>
+      </div>
+
+      <!-- ── PARQUET ─────────────────────────────────────────── -->
+      <div id="pg-parquet" class="page">
+        <div class="alert a-i">⚖️ Chaque saisine est enregistrée et notifiée.</div>
+        <div class="g2">
+          <div class="card"><div class="card-head"><span class="card-title">⚖️ Nouvelle saisine</span></div>
+            <div class="fg"><label>Type</label><select id="p-type"><option>Déférement</option><option>Information judiciaire</option><option>Classement sans suite</option><option>Rappel à la loi</option></select></div>
+            <div class="fg"><label>Mis en cause</label><input id="p-nom" placeholder="Nom, Prénom"></div>
+            <div class="fg"><label>Qualification pénale</label><input id="p-qual" placeholder="Ex: Art. 221-1 CP"></div>
+            <div class="fg"><label>Résumé des faits</label><textarea id="p-resume" rows="4" placeholder="Résumé..."></textarea></div>
+            <div class="fg"><label>Pièces / Preuves</label><input id="p-pieces" placeholder="PV, vidéo, rapport..."></div>
+            <button class="btn btn-s" onclick="sendParquet()" style="width:100%;padding:11px">📤 Envoyer au Procureur</button>
+          </div>
+          <div class="card"><div class="card-head"><span class="card-title">📋 Dossiers transmis</span></div>
+            <div class="tbl-wrap">
+            <table><thead><tr><th>Mis en cause</th><th>Type</th><th>Date</th><th>Statut</th><th id="p-del-th" style="display:none">Suppr.</th></tr></thead>
+            <tbody id="p-table"><tr><td colspan="4" style="text-align:center;color:var(--text3);padding:16px">Aucun dossier</td></tr></tbody></table></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── CASIER ─────────────────────────────────────────── -->
+      <div id="pg-casier" class="page">
+        <div style="display:flex;gap:8px;margin-bottom:16px;align-items:center;">
+          <input id="casier-search" placeholder="🔍  Rechercher un suspect..." class="amende-search" style="margin-bottom:0;flex:1;" onkeydown="if(event.key==='Enter')searchCasier()">
+          <button class="btn btn-p" onclick="searchCasier()">Rechercher</button>
+          <button class="btn btn-o" onclick="om('m-casier')">➕ Nouveau casier</button>
+        </div>
+        <div id="casier-list"><div class="alert a-i">Aucun casier enregistré.</div></div>
+      </div>
+
+      <!-- ── PV ─────────────────────────────────────────── -->
+      <div id="pg-pv" class="page">
+        <div style="display:flex;gap:8px;margin-bottom:16px;">
+          <button class="btn btn-amber" onclick="om('m-pv')">📄 Émettre un PV</button>
+        </div>
+        <div class="card"><div class="card-head"><span class="card-title">📄 PV & Amendes émis</span></div>
+          <div class="tbl-wrap">
+          <table><thead><tr><th>#</th><th>Contrevenant</th><th>Infraction</th><th>Article</th><th>Montant</th><th>Agent</th><th>Date</th><th>Statut</th><th id="pv-del-th">Actions</th></tr></thead>
+          <tbody id="pv-table"><tr><td colspan="9" style="text-align:center;color:var(--text3);padding:20px">Aucun PV émis</td></tr></tbody></table>
+          </div></div>
+      </div>
+
+      <!-- ── AGENTS ─────────────────────────────────────────── -->
+      <div id="pg-agents" class="page">
+        <div class="alert a-g">🔐 Gestion des accès — Chef OPJ / Directeur / Commissaire uniquement.</div>
+        <div style="display:flex;gap:8px;margin:12px 0 16px;">
+          <button class="btn btn-p" onclick="om('m-add-agent')">➕ Créer un agent</button>
+        </div>
+        <div class="card"><div class="card-head"><span class="card-title">🪪 Effectifs</span></div>
+          <div id="agents-list"></div>
+        </div>
+      </div>
+
+      <!-- ── LOGS ─────────────────────────────────────────── -->
+      <div id="pg-logs" class="page">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;">
+          <div style="font-family:'Syne',sans-serif;font-size:14px;color:var(--gold);">📊 Journal de connexions</div>
+          <button class="btn btn-o btn-sm" onclick="clearLogs()">🗑️ Vider</button>
+        </div>
+        <div class="card">
+          <div class="tbl-wrap">
+          <table><thead><tr><th>Heure</th><th>Identifiant</th><th>Nom</th><th>Rôle</th><th>Résultat</th><th>IP simulée</th></tr></thead>
+          <tbody id="logs-table"><tr><td colspan="6" style="text-align:center;color:var(--text3);padding:20px">Aucun log</td></tr></tbody></table>
+          </div></div>
+      </div>
+
+      <!-- ── PROFIL ─────────────────────────────────────────── -->
+      <div id="pg-profil" class="page">
+        <div class="card" style="max-width:500px;"><div class="card-head"><span class="card-title">👤 Mon profil</span></div><div id="profil-c"></div></div>
+      </div>
+
+    </div><!-- /content -->
+  </div><!-- /app-body -->
+</div><!-- /app -->
+
+<!-- ══════════════════════════════ MODALS ══════════════════════════════ -->
+<div class="modal-bg" id="m-gav">
+  <div class="modal">
+    <button class="mclose" onclick="cm('m-gav')">✕</button>
+    <h3>🔒 Ouvrir une Garde à Vue</h3>
+    <div class="fg"><label>Nom du gardé</label><input id="g-nom" placeholder="NOM Prénom"></div>
+    <div class="fg"><label>Date de naissance</label><input type="date" id="g-ddn"></div>
+    <div class="fg"><label>Motif</label><input id="g-motif" placeholder="Ex: Suspicion trafic de stupéfiants"></div>
+    <div class="fg"><label>Officier responsable</label><input id="g-off" placeholder="Grade + Nom"></div>
+    <div class="fg"><label>Durée initiale (heures)</label><input type="number" id="g-dur" value="24" min="1" max="96"></div>
+    <div class="fg"><label>Droits notifiés</label>
+      <div style="display:flex;flex-direction:column;gap:6px;font-size:12px;color:var(--text2);margin-top:5px;">
+        <label style="text-transform:none;letter-spacing:0;cursor:pointer;"><input type="checkbox" checked style="width:auto;margin-right:6px;">Droit d'informer un proche</label>
+        <label style="text-transform:none;letter-spacing:0;cursor:pointer;"><input type="checkbox" checked style="width:auto;margin-right:6px;">Droit à un interprète</label>
+        <label style="text-transform:none;letter-spacing:0;cursor:pointer;"><input type="checkbox" checked style="width:auto;margin-right:6px;">Droit à un médecin</label>
+        <label style="text-transform:none;letter-spacing:0;cursor:pointer;"><input type="checkbox" checked style="width:auto;margin-right:6px;">Droit de se taire</label>
+        <label style="text-transform:none;letter-spacing:0;cursor:pointer;"><input type="checkbox" style="width:auto;margin-right:6px;">Droit à un avocat (dès la 1ère heure)</label>
+      </div>
+    </div>
+    <button class="btn btn-d" onclick="createGAV()" style="width:100%;padding:12px;margin-top:10px;">🔒 Placer en GAV</button>
+  </div>
+</div>
+
+<div class="modal-bg" id="m-rapport">
+  <div class="modal">
+    <button class="mclose" onclick="cm('m-rapport')">✕</button>
+    <h3>📋 Nouveau rapport d'intervention</h3>
+    <div class="fg"><label>Type</label>
+      <select id="r-type"><option>Intervention criminelle</option><option>Arrestation</option><option>Perquisition</option><option>Filature / Surveillance</option><option>Accident de la route</option><option>Flagrant délit</option><option>Autre</option></select>
+    </div>
+    <div class="fg"><label>Titre de l'intervention</label><input id="r-titre" placeholder="Ex: Arrestation Liberty Way"></div>
+    <div class="fg"><label>Lieu</label><input id="r-lieu" placeholder="Ex: Liberty Way, Vogaria"></div>
+    <div class="fg"><label>Personnes impliquées</label><input id="r-pers" placeholder="Suspects, témoins..."></div>
+    <div class="fg"><label>Déroulement des faits</label><textarea id="r-faits" rows="5" placeholder="Décrivez chronologiquement..."></textarea></div>
+    <div class="fg"><label>Résultat / Suite donnée</label><textarea id="r-suite" rows="3" placeholder="Arrestation, GAV, remis en liberté..."></textarea></div>
+    <div class="fg"><label>Pièces jointes / Preuves</label><input id="r-preuves" placeholder="Vidéo, photos, PV..."></div>
+    <button class="btn btn-p" onclick="createRapport()" style="width:100%;padding:11px;margin-top:8px;">✅ Soumettre</button>
+  </div>
+</div>
+
+<div class="modal-bg" id="m-pv">
+  <div class="modal">
+    <button class="mclose" onclick="cm('m-pv')">✕</button>
+    <h3>📄 Émettre un PV / Amende</h3>
+    <div class="fg"><label>Contrevenant (Nom, Prénom)</label><input id="pv-nom" placeholder="NOM Prénom"></div>
+    <div class="fg"><label>Infraction</label>
+      <select id="pv-infrac" onchange="autofillPV()">
+        <option value="">— Sélectionner une infraction —</option>
+      </select>
+    </div>
+    <div class="fg"><label>Article de loi</label><input id="pv-art" placeholder="Article de loi" readonly style="background:rgba(255,255,255,0.02)"></div>
+    <div class="fg"><label>Montant (€)</label><input id="pv-montant" type="number" placeholder="Ex: 350"></div>
+    <div class="fg"><label>Lieu de l'infraction</label><input id="pv-lieu" placeholder="Ex: Highway 55 Nord"></div>
+    <div class="fg"><label>Notes complémentaires</label><textarea id="pv-notes" rows="3"></textarea></div>
+    <button class="btn btn-amber" onclick="createPV()" style="width:100%;padding:11px;margin-top:8px;">📄 Émettre le PV</button>
+  </div>
+</div>
+
+<div class="modal-bg" id="m-incident">
+  <div class="modal">
+    <button class="mclose" onclick="cm('m-incident')">✕</button>
+    <h3>📍 Signaler un incident</h3>
+    <div class="fg"><label>Lieu / Zone</label>
+      <select id="i-lieu"><option>Liberty Way</option><option>Freedom Avenue</option><option>Independence Pkwy</option><option>Colonial Drive</option><option>Gibson Lane</option><option>Orchard Boulevard</option><option>Highway 55 Nord</option><option>Highway 55 Sud</option><option>Spring Creek Rd</option><option>Lakeview Court</option></select>
+    </div>
+    <div class="fg"><label>Type d'incident</label>
+      <select id="i-type"><option value="grave">🔴 Grave (fusillade, homicide)</option><option value="moyen">🟡 Moyen (vol, bagarre)</option><option value="patrol">🔵 Patrouille</option><option value="resolu">🟢 Résolu</option></select>
+    </div>
+    <div class="fg"><label>Description</label><textarea id="i-desc" rows="3"></textarea></div>
+    <div class="fg"><label>Agent signalant</label><input id="i-agent" placeholder="Grade + Nom"></div>
+    <button class="btn btn-p" onclick="addIncident()" style="width:100%;padding:11px;margin-top:8px;">📍 Ajouter sur la carte</button>
+  </div>
+</div>
+
+<div class="modal-bg" id="m-casier">
+  <div class="modal">
+    <button class="mclose" onclick="cm('m-casier')">✕</button>
+    <h3>🗂️ Ajouter un casier judiciaire</h3>
+    <div class="fg"><label>Nom complet</label><input id="c-nom" placeholder="NOM Prénom"></div>
+    <div class="fg"><label>Date de naissance</label><input type="date" id="c-ddn"></div>
+    <div class="fg"><label>Description physique</label><input id="c-desc" placeholder="Taille, cheveux, signes particuliers..."></div>
+    <div class="fg"><label>Infraction commise</label><input id="c-infrac" placeholder="Ex: Trafic de stupéfiants Art. L.3421-1"></div>
+    <div class="fg"><label>Gravité</label>
+      <select id="c-grav"><option value="grave">🔴 Crime grave</option><option value="moyen">🟡 Délit moyen</option><option value="leger">🔵 Infraction légère</option></select>
+    </div>
+    <div class="fg"><label>Peine / Issue</label><input id="c-peine" placeholder="Ex: GAV 24h, mis en examen, condamné 2 ans..."></div>
+    <div class="fg"><label>Notes</label><textarea id="c-notes" rows="3"></textarea></div>
+    <button class="btn btn-p" onclick="addCasier()" style="width:100%;padding:11px;margin-top:8px;">✅ Enregistrer</button>
+  </div>
+</div>
+
+<div class="modal-bg" id="m-add-agent">
+  <div class="modal">
+    <button class="mclose" onclick="cm('m-add-agent')">✕</button>
+    <h3>➕ Créer un compte agent</h3>
+    <div class="alert a-g">🔑 Les identifiants seront affichés une seule fois.</div>
+    <div class="fg"><label>Nom complet RP</label><input id="a-nom" placeholder="NOM Prénom"></div>
+    <div class="fg"><label>Pseudo Discord</label><input id="a-pseudo" placeholder="Pseudo#0000"></div>
+    <div class="fg"><label>Rôle</label>
+      <select id="a-role"><option value="opj">OPJ</option><option value="lieutenant">Lieutenant</option><option value="capitaine">Capitaine</option><option value="commissaire">Commissaire</option><option value="directeur">Directeur Police</option></select>
+    </div>
+    <div class="fg"><label>Brigade</label>
+      <select id="a-brigade"><option>Criminelle</option><option>Financière</option><option>Stupéfiants</option><option>Cyber</option><option>Direction</option></select>
+    </div>
+    <div class="fg"><label>ID personnalisé (vide = auto)</label><input id="a-id" placeholder="Ex: OPJ-007"></div>
+    <div class="fg"><label>Mot de passe (vide = auto)</label><input type="password" id="a-pw" placeholder="••••••••"></div>
+    <button class="btn btn-g" onclick="createAgent()" style="width:100%;padding:12px;margin-top:8px;">✅ Créer le compte</button>
+  </div>
+</div>
+
+<div class="modal-bg" id="m-creds">
+  <div class="modal">
+    <button class="mclose" onclick="cm('m-creds')">✕</button>
+    <div id="creds-c"></div>
+    <button class="btn btn-o" onclick="cm('m-creds')" style="width:100%;margin-top:14px;">Fermer</button>
+  </div>
+</div>
+
+<div class="modal-bg" id="m-view-rapport">
+  <div class="modal" style="max-width:640px;">
+    <button class="mclose" onclick="cm('m-view-rapport')">✕</button>
+    <div id="rapport-view-c"></div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════ JAVASCRIPT ══════════════════════════════ -->
+<script>
+// ── AMENDES DATA ─────────────────────────────────────────────────────────
+const AMENDES=[
+  // CONTRAVENTIONS
+  {n:'Alcoolémie ≥ 0,5 g/L',q:'Contravention',art:'Article R234-1',p:350},
+  {n:'Excès de vitesse (0–11 km/h)',q:'Contravention',art:'Article R413-14',p:350},
+  {n:'Excès de vitesse (11–25 km/h)',q:'Contravention',art:'Article R413-14',p:450},
+  {n:'Excès de vitesse (25–36 km/h)',q:'Contravention',art:'Article R413-14',p:550},
+  {n:'Excès de vitesse (36–55 km/h)',q:'Contravention',art:'Article R413-14',p:650},
+  {n:'Franchissement feu rouge',q:'Contravention',art:'Article R412-30',p:650},
+  {n:'Ivresse manifeste',q:'Contravention',art:'Article R234-1',p:350},
+  {n:'Non-port de la ceinture',q:'Contravention',art:'Article R412-1',p:135},
+  {n:'Non-port du casque',q:'Contravention',art:'Article R431-1',p:135},
+  {n:'Non-présentation du permis',q:'Contravention',art:'Article R233-1',p:500},
+  {n:'Stationnement gênant',q:'Contravention',art:'Article R417',p:135},
+  {n:'Stop non respecté',q:'Contravention',art:'Article R415-6',p:350},
+  {n:'Téléphone au volant',q:'Contravention',art:'Article R412-6-1',p:135},
+  // DÉLITS
+  {n:'Abandon de famille',q:'Délit',art:'Articles 227-3 et suivants',p:null},
+  {n:'Abus de confiance',q:'Délit',art:'Article 314-1',p:4500},
+  {n:'Abus de confiance aggravé',q:'Délit',art:'Article 314-2 et suivants',p:5500},
+  {n:'Abus de confiance en bande organisé',q:'Délit',art:'Article 314-1-1',p:5000},
+  {n:'Alcool + stupéfiants',q:'Délit',art:'Article L235-1',p:1500},
+  {n:'Alcoolémie ≥ 0,8 g/L',q:'Délit',art:'Article L234-1',p:750},
+  {n:'Appels/messages malveillants réitérés',q:'Délit',art:'Article 222-16',p:1250},
+  {n:'Atteintes involontaires à l\'intégrité',q:'Délit',art:'Article 222-19',p:2500},
+  {n:'Atteintes volontaires à l\'intégrité',q:'Délit',art:'Article 222-20 et suivants',p:3000},
+  {n:'Attroupement (après sommations)',q:'Délit',art:'Article 431-4',p:2500},
+  {n:'Attroupement armé (après sommations)',q:'Délit',art:'Article 431-5',p:3000},
+  {n:'Détention illégale d\'arme',q:'Délit',art:'Article L317-4 CSI',p:5000},
+  {n:'Détournement / Destruction de saisis',q:'Délit',art:'Article 314-6',p:null},
+  {n:'Détournement de fonds',q:'Délit',art:'Article 432-15',p:null},
+  {n:'Discriminations',q:'Délit',art:'Article 225-1 et suivants',p:1500},
+  {n:'Escroquerie',q:'Délit',art:'Article 313-1',p:1500},
+  {n:'Escroquerie aggravée',q:'Délit',art:'Article 313-2',p:2500},
+  {n:'Excès de vitesse (> 55 km/h)',q:'Délit',art:'Article L413-1',p:850},
+  {n:'Exhibition sexuelle imposée',q:'Délit',art:'Article 222-32',p:7500},
+  {n:'Extorsion',q:'Délit',art:'Article 312-1',p:6500},
+  {n:'Extorsion aggravée',q:'Délit',art:'Article 312-2 et suivants',p:6750},
+  {n:'Extorsion en bande organisée',q:'Délit',art:'Article 312-6 et suivants',p:7000},
+  {n:'Fausse plaque / plaque non conforme',q:'Délit',art:'Article L317-2',p:3500},
+  {n:'Filouterie',q:'Délit',art:'Article 313-5',p:2000},
+  {n:'Groupe de combat',q:'Délit',art:'Article 431-13 et suivants',p:3750},
+  {n:'Harcèlement moral',q:'Délit',art:'Article 222-33-2 et suivants',p:5500},
+  {n:'Harcèlement sexuel',q:'Délit',art:'Article 222-33',p:5500},
+  {n:'Importation/exportation illicites de stupéfiants',q:'Délit',art:'Article 222-36',p:3000},
+  {n:'Introduction dans un espace privé',q:'Délit',art:'Article 315-1',p:1500},
+  {n:'Intrusion dans un établissement scolaire',q:'Délit',art:'Article 431-22',p:4000},
+  {n:'Intrusion scolaire armé',q:'Délit',art:'Article 431-24',p:5500},
+  {n:'Intrusion scolaire en réunion',q:'Délit',art:'Article 431-23',p:5000},
+  {n:'Intrusion scolaire en réunion armé',q:'Délit',art:'Article 431-25',p:10500},
+  {n:'Le fait d\'acquérir / détenir armes de guerre',q:'Délit',art:'Article 222-52',p:5000},
+  {n:'Le fait de constituer ou reconstituer une arme',q:'Délit',art:'Article 222-59',p:15000},
+  {n:'Le fait de détenir un dépôt d\'armes cat. A ou B',q:'Délit',art:'Article 222-53',p:3500},
+  {n:'Le fait de diriger un groupement armé',q:'Délit',art:'Article 222-34',p:null},
+  {n:'Le fait de porter armes cat. A ou B hors domicile',q:'Délit',art:'Article 222-54',p:null},
+  {n:'Le fait d\'arrêter, d\'enlever une personne',q:'Délit',art:'Article 224-1 et suivants',p:5000},
+  {n:'Le transport illicite de stupéfiants',q:'Délit',art:'Article 222-37 et suivants',p:null},
+  {n:'La cession illicite de stupéfiants',q:'Délit',art:'Article 222-39',p:3500},
+  {n:'Manifestation illégale',q:'Délit',art:'Article 431-9 et suivants',p:3000},
+  {n:'Menace de mort',q:'Délit',art:'Article 222-17',p:1350},
+  {n:'Menace de mort (récidive)',q:'Délit',art:'Article 222-17',p:1750},
+  {n:'Mise en danger d\'autrui',q:'Délit',art:'Article 223-1',p:1500},
+  {n:'Mise en péril des mineurs',q:'Délit',art:'Articles 227-15 et suivants',p:null},
+  {n:'Occupation sans droit d\'un logement',q:'Délit',art:'Article 315-2',p:2500},
+  {n:'Port d\'arme prohibé',q:'Délit',art:'Article L317-8 CSI',p:5500},
+  {n:'Production / fabrication illicites de stupéfiants',q:'Délit',art:'Article 222-35',p:3000},
+  {n:'Provocation au suicide d\'autrui',q:'Délit',art:'Article 223-13',p:null},
+  {n:'Provocation directe à un attroupement armé',q:'Délit',art:'Article 431-6',p:3500},
+  {n:'Proxénétisme / prostitution',q:'Délit',art:'Article 225-5 et suivants',p:8500},
+  {n:'Recel',q:'Délit',art:'Article 321-1',p:3500},
+  {n:'Recel en bande organisée / aggravé',q:'Délit',art:'Article 321-2 et suivants',p:3750},
+  {n:'Refus d\'obtempérer',q:'Délit',art:'Article L233-1',p:1500},
+  {n:'Refus de dépistage alcool',q:'Délit',art:'Article L234-8',p:500},
+  {n:'Refus de dépistage stupéfiants',q:'Délit',art:'Article L235-3',p:600},
+  {n:'Risques causés à autrui',q:'Délit',art:'Article 223-1 et suivants',p:2500},
+  {n:'Rodéo urbain',q:'Délit',art:'Article L236-1',p:2350},
+  {n:'Sabotage',q:'Délit',art:'Article 411-9',p:2150},
+  {n:'Si la personne a été prise comme otage',q:'Délit',art:'Article 224-4 et suivants',p:7500},
+  {n:'Transport d\'armes',q:'Délit',art:'Article R315-3 du Code de Sécurité Intérieur',p:null},
+  {n:'Usurpation d\'identité',q:'Délit',art:'Article 226-4-1',p:null},
+  {n:'Vol aggravé',q:'Délit',art:'Article 311-4 à Article 311-10',p:5000},
+  {n:'Vol en bande organisée',q:'Délit',art:'Article 311-9 et suivants',p:4500},
+  {n:'Vol suivi de violence',q:'Délit',art:'Article 311-11',p:5500},
+  {n:'Vol sur autrui',q:'Délit',art:'Article 311-1 et suivants',p:4000},
+  // CRIMES
+  {n:'Agression sexuelle',q:'Crime',art:'Article 222-22 et suivants',p:null},
+  {n:'Association de malfaiteurs',q:'Crime',art:'Article 450-1',p:null},
+  {n:'Attentat',q:'Crime',art:'Article 412-1',p:null},
+  {n:'Atteintes aux intérêts fondamentaux de la Nation',q:'Crime',art:'Article 411-1 et suivants',p:null},
+  {n:'Blanchiment',q:'Crime',art:'Article 324-1',p:null},
+  {n:'Disparition forcée',q:'Crime',art:'Article 221-12',p:null},
+  {n:'Embuscade',q:'Crime',art:'Article 222-15-1',p:null},
+  {n:'Empoisonnement',q:'Crime',art:'Article 221-5',p:null},
+  {n:'Entrave à la liberté',q:'Crime',art:'Article 431-1 et suivants',p:null},
+  {n:'Exhibition sexuelle sur mineur',q:'Crime',art:'Article 222-32',p:null},
+  {n:'Génocide',q:'Crime',art:'Article 211-1 ; Article 211-2',p:null},
+  {n:'Homicide avec préméditation / guet-apens',q:'Crime',art:'Article 221-3 ; Article 221-18',p:null},
+  {n:'Homicide involontaire',q:'Crime',art:'Article 221-6',p:null},
+  {n:'Homicide suivi d\'un autre crime',q:'Crime',art:'Article 221-2',p:null},
+  {n:'Homicide volontaire',q:'Crime',art:'Article 221-1',p:null},
+  {n:'Le fait de diriger un groupement — production drogue',q:'Crime',art:'Article 222-34',p:null},
+  {n:'Organisation criminelle',q:'Crime',art:'Article 450-1-1',p:null},
+  {n:'Terrorisme',q:'Crime',art:'Article 421-1 et suivants',p:null},
+  {n:'Terrorisme ayant entraîné la mort',q:'Crime',art:'Article 421-4 et suivants',p:null},
+  {n:'Torture / Acte de barbarie',q:'Crime',art:'Article 222-1 et suivants',p:null},
+  {n:'Torture / Acte de barbarie suivi d\'un autre crime',q:'Crime',art:'Article 222-2',p:null},
+  {n:'Viol',q:'Crime',art:'Article 222-23 et suivants',p:null},
+  {n:'Violences ayant entraîné la mort',q:'Crime',art:'Article 222-7 et suivants',p:null},
+  {n:'Violences graves',q:'Crime',art:'Article 222-14 et suivants',p:null},
+];
+
+// ── DB / PERSIST ─────────────────────────────────────────────────────────
+const DB_KEY='pj_db_v4';
+const SESSION_KEY='pj_session_v4';
+const SAVED_CREDS_KEY='pj_saved_creds_v4';
+
+function loadDB(){
+  try{const d=localStorage.getItem(DB_KEY);return d?JSON.parse(d):initDB();}
+  catch{return initDB();}
+}
+function initDB(){
+  const db={
+    agents:[
+      {id:'CHEF-OPJ',pw:'ChefPJ-2025!',role:'chef_opj',nom:'Chef OPJ',pseudo:'ChefOPJ',brigade:'Direction',couleur:'#ef4444',createdAt:now()},
+      {id:'DIR-001',pw:'Dir-PJ-2025!',role:'directeur',nom:'Directeur Police',pseudo:'DirecteurPN',brigade:'Direction',couleur:'#c9a84c',createdAt:now()},
+      {id:'COM-001',pw:'Com-PJ-2025!',role:'commissaire',nom:'Commissaire PJ',pseudo:'CommissairePJ',brigade:'Criminelle',couleur:'#8b5cf6',createdAt:now()}
+    ],
+    gavs:[],rapports:[],parquet:[],casiers:[],incidents:[],pvs:[],logs:[],activity:[]
+  };
+  saveDB(db);return db;
+}
+function saveDB(db){localStorage.setItem(DB_KEY,JSON.stringify(db));}
+function now(){return new Date().toLocaleString('fr-FR');}
+function today(){return new Date().toLocaleDateString('fr-FR');}
+function ts(){return Date.now();}
+
+// ── SAVED CREDENTIALS ────────────────────────────────────────────────────
+function getSavedCreds(){
+  try{return JSON.parse(localStorage.getItem(SAVED_CREDS_KEY))||[];}
+  catch{return[];}
+}
+function saveCred(agent){
+  let creds=getSavedCreds();
+  const idx=creds.findIndex(c=>c.id===agent.id);
+  const entry={id:agent.id,pw:agent.pw,nom:agent.nom,role:agent.role,couleur:agent.couleur||'#3b82f6'};
+  if(idx>=0)creds[idx]=entry;else creds.unshift(entry);
+  if(creds.length>8)creds=creds.slice(0,8);
+  localStorage.setItem(SAVED_CREDS_KEY,JSON.stringify(creds));
+}
+function removeSavedCred(id){
+  let creds=getSavedCreds().filter(c=>c.id!==id);
+  localStorage.setItem(SAVED_CREDS_KEY,JSON.stringify(creds));
+  renderSavedCreds();
+}
+function renderSavedCreds(){
+  const creds=getSavedCreds();
+  const wrap=document.getElementById('saved-creds-list');
+  const items=document.getElementById('saved-creds-items');
+  if(!creds.length){wrap.classList.remove('show');return;}
+  wrap.classList.add('show');
+  const ROLES_MAP={chef_opj:'Chef OPJ',directeur:'Directeur Police',commissaire:'Commissaire',capitaine:'Capitaine',lieutenant:'Lieutenant',opj:'OPJ'};
+  items.innerHTML=creds.map(c=>`
+    <div class="saved-creds-item" onclick="fillCreds('${c.id}','${c.pw}')">
+      <div class="sci-av" style="background:${c.couleur||'#3b82f6'}">${c.nom.slice(0,2).toUpperCase()}</div>
+      <div class="sci-info"><div class="sci-name">${c.nom}</div><div class="sci-role">${ROLES_MAP[c.role]||c.role} · ${c.id}</div></div>
+      <button onclick="event.stopPropagation();removeSavedCred('${c.id}')" style="background:none;border:none;color:var(--text3);cursor:pointer;font-size:13px;padding:4px;">✕</button>
+    </div>`).join('');
+}
+function fillCreds(id,pw){
+  document.getElementById('l-id').value=id;
+  document.getElementById('l-pw').value=pw;
+  doLogin();
+}
+
+// ── SESSION PERSISTENCE ──────────────────────────────────────────────────
+function saveSession(agent){
+  sessionStorage.setItem(SESSION_KEY,JSON.stringify({id:agent.id,pw:agent.pw}));
+}
+function loadSession(){
+  try{return JSON.parse(sessionStorage.getItem(SESSION_KEY));}
+  catch{return null;}
+}
+function clearSession(){
+  sessionStorage.removeItem(SESSION_KEY);
+}
+
+// ── ROLES ────────────────────────────────────────────────────────────────
+const ROLES={
+  chef_opj:{label:'Chef OPJ',c:'#ef4444',access:'chef'},
+  directeur:{label:'Directeur Police',c:'#c9a84c',access:'chef'},
+  commissaire:{label:'Commissaire',c:'#8b5cf6',access:'chef'},
+  capitaine:{label:'Capitaine',c:'#3b82f6',access:'admin'},
+  lieutenant:{label:'Lieutenant',c:'#3b82f6',access:'agent'},
+  opj:{label:'OPJ',c:'#64748b',access:'agent'}
+};
+function isChef(){const r=ROLES[currentUser?.role];return r?.access==='chef';}
+function isAdmin(){const r=ROLES[currentUser?.role];return r?.access==='chef'||r?.access==='admin';}
+
+// ── AUTH ─────────────────────────────────────────────────────────────────
+let db=loadDB();
+let currentUser=null;
+
+function doLogin(){
+  const id=document.getElementById('l-id').value.trim();
+  const pw=document.getElementById('l-pw').value;
+  const agent=db.agents.find(a=>a.id===id&&a.pw===pw);
+  const ip=`192.168.${Math.floor(Math.random()*255)}.${Math.floor(Math.random()*255)}`;
+  const r=ROLES[agent?.role]||ROLES['opj'];
+  db.logs.unshift({ts:now(),id,nom:agent?.nom||'—',role:r.label,result:agent?'SUCCESS':'FAIL',ip});
+  saveDB(db);
+  if(!agent){
+    document.getElementById('lerr').style.display='block';
+    document.getElementById('l-pw').value='';
+    return;
+  }
+  document.getElementById('lerr').style.display='none';
+  currentUser=agent;
+  saveSession(agent);
+  if(document.getElementById('save-creds').checked)saveCred(agent);
+  document.getElementById('login').style.display='none';
+  document.getElementById('app').classList.add('on');
+  initApp();
+}
+function doLogout(){
+  currentUser=null;
+  clearSession();
+  document.getElementById('login').style.display='flex';
+  document.getElementById('app').classList.remove('on');
+  document.getElementById('l-id').value='';
+  document.getElementById('l-pw').value='';
+}
+function tryAutoLogin(){
+  const sess=loadSession();
+  if(!sess)return false;
+  const agent=db.agents.find(a=>a.id===sess.id&&a.pw===sess.pw);
+  if(!agent)return false;
+  currentUser=agent;
+  document.getElementById('login').style.display='none';
+  document.getElementById('app').classList.add('on');
+  initApp();
+  return true;
+}
+
+// ── INIT ─────────────────────────────────────────────────────────────────
+function initApp(){
+  const r=ROLES[currentUser.role]||ROLES['opj'];
+  document.getElementById('t-name').textContent=currentUser.pseudo;
+  document.getElementById('t-role').textContent=r.label;
+  const av=document.getElementById('t-av');
+  av.textContent=currentUser.pseudo.slice(0,2).toUpperCase();
+  av.style.background=currentUser.couleur||r.c;
+  document.getElementById('sb-admin').style.display=isAdmin()?'':'none';
+  document.getElementById('btn-agent').style.display=isChef()?'':'none';
+  buildAmendesPV();
+  buildAmendesPage();
+  renderAll();
+  setInterval(tickGAVs,1000);
+  gp('dash');
+  const fails=db.logs.filter(l=>l.result==='FAIL').length;
+  document.getElementById('notif-dot').style.display=fails>0?'block':'none';
+}
+function renderAll(){
+  refreshStats();renderAgents();renderLogs();renderGAVs();
+  renderRapports();renderParquet();renderCasier();renderIncidents();
+  renderActivity();renderProfil();renderPVs();
+  updateDeleteUI();
+}
+function updateDeleteUI(){
+  // Show/hide delete columns for chef roles
+  const del=isChef();
+  const els=[
+    {id:'gav-hist-del-th',val:del},
+    {id:'p-del-th',val:del},
+  ];
+  els.forEach(e=>{const el=document.getElementById(e.id);if(el)el.style.display=e.val?'':'none';});
+}
+
+const PTITLES={dash:'Tableau de bord',carte:'Carte Vogaria',amendes:'Barème des amendes',gav:'Gardes à Vue',rapports:'Rapports',parquet:'Parquet',casier:'Casier judiciaire',pv:'PV & Amendes',agents:'Agents',logs:'Logs connexion',profil:'Mon profil'};
+function gp(id){
+  if(['agents','logs'].includes(id)&&!isAdmin()){alert('🔐 Accès refusé.');return;}
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('on'));
+  document.querySelectorAll('.sb-item').forEach(n=>n.classList.remove('on'));
+  const pg=document.getElementById('pg-'+id);
+  if(pg)pg.classList.add('on');
+  document.querySelectorAll('.sb-item').forEach(n=>{
+    if(n.getAttribute('onclick')?.includes("'"+id+"'"))n.classList.add('on');
+  });
+  document.getElementById('t-page').textContent=PTITLES[id]||id;
+  if(id==='profil')renderProfil();
+}
+function om(id){document.getElementById(id).classList.add('on');}
+function cm(id){document.getElementById(id).classList.remove('on');}
+
+// ── STATS ─────────────────────────────────────────────────────────────────
+function refreshStats(){
+  document.getElementById('s-gav').textContent=db.gavs.filter(g=>g.active).length;
+  document.getElementById('s-rap').textContent=db.rapports.length;
+  document.getElementById('s-pv').textContent=db.pvs.length;
+  document.getElementById('s-agents').textContent=db.agents.length;
+  document.getElementById('s-casier').textContent=db.casiers.length;
+}
+
+// ── ACTIVITY ─────────────────────────────────────────────────────────────
+function addActivity(txt){
+  db.activity.unshift({ts:now(),txt});
+  if(db.activity.length>30)db.activity.pop();
+  saveDB(db);renderActivity();
+}
+function renderActivity(){
+  const el=document.getElementById('dash-act');
+  if(!db.activity.length){el.innerHTML='<div style="padding:8px 0;color:var(--text3);">Aucune activité</div>';return;}
+  el.innerHTML=db.activity.slice(0,10).map(a=>`<div style="padding:7px 0;border-bottom:1px solid var(--border);font-size:11.5px;"><span style="color:var(--text3);font-family:'DM Mono',monospace;font-size:10px;">${a.ts}</span><br>${a.txt}</div>`).join('');
+}
+
+// ── GAV ───────────────────────────────────────────────────────────────────
+function createGAV(){
+  const nom=document.getElementById('g-nom').value||'Inconnu';
+  const motif=document.getElementById('g-motif').value||'Non précisé';
+  const off=document.getElementById('g-off').value||currentUser.nom;
+  const dur=parseInt(document.getElementById('g-dur').value)||24;
+  db.gavs.push({id:ts(),nom,motif,off,dur,rem:dur*3600,active:true,createdAt:now()});
+  saveDB(db);cm('m-gav');renderGAVs();refreshStats();
+  addActivity('🔒 GAV ouverte — '+nom+' ('+motif+')');
+}
+function renderGAVs(){
+  const actives=db.gavs.filter(g=>g.active);
+  document.getElementById('s-gav').textContent=actives.length;
+  const el=document.getElementById('gav-list');
+  const dash=document.getElementById('dash-gav');
+  if(!actives.length){
+    el.innerHTML='<div class="alert a-i">Aucune GAV active.</div>';
+    dash.innerHTML='<div class="alert a-i">Aucune GAV active.</div>';
+  }else{
+    el.innerHTML=actives.map(g=>{
+      const pct=Math.max(0,Math.min(100,(g.rem/(g.dur*3600))*100));
+      const h=Math.floor(g.rem/3600),m=Math.floor((g.rem%3600)/60);
+      const col=pct>50?'#22c55e':pct>20?'#f59e0b':'#ef4444';
+      const delBtn=isChef()?`<button class="btn btn-d btn-sm" onclick="deleteGAVActive(${g.id})">🗑️</button>`:'';
+      return`<div class="gav-card"><div style="display:flex;justify-content:space-between;align-items:flex-start;"><div><div style="font-weight:600;font-size:13px;">${g.nom}</div><div style="font-size:11px;color:var(--text2);margin-top:2px;">${g.motif} · ${g.off}</div><div style="font-size:10px;color:var(--text3);margin-top:1px;">${g.createdAt}</div></div><div class="gav-timer" style="color:${col}">${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}</div></div><div class="tbar"><div class="tfill" style="width:${pct}%;background:${col}"></div></div><div style="display:flex;gap:6px;margin-top:10px;"><button class="btn btn-o btn-sm" onclick="extGAV(${g.id})">+24h</button><button class="btn btn-d btn-sm" onclick="closeGAV(${g.id})">🔓 Clore</button><button class="btn btn-p btn-sm" onclick="gp('parquet')">⚖️ Parquet</button>${delBtn}</div></div>`;
+    }).join('');
+    dash.innerHTML=actives.map(g=>{
+      const h=Math.floor(g.rem/3600),m=Math.floor((g.rem%3600)/60);
+      return`<div style="display:flex;justify-content:space-between;padding:7px 0;border-bottom:1px solid var(--border);font-size:12px;"><span>${g.nom}</span><span style="font-family:'DM Mono',monospace;color:var(--gold)">${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}</span></div>`;
+    }).join('');
+  }
+  const hist=db.gavs.filter(g=>!g.active);
+  document.getElementById('gav-hist').innerHTML=hist.length?hist.map(g=>`<tr><td class="td-name">${g.nom}</td><td>${g.off}</td><td>${g.motif}</td><td>${g.dur}h</td><td><span class="bdg b-gray">${g.issue||'Clôturée'}</span></td><td>${g.createdAt}</td>${isChef()?`<td><button class="btn btn-d btn-sm" onclick="deleteGAVHist(${g.id})">🗑️</button></td>`:''}</tr>`).join(''):'<tr><td colspan="7" style="text-align:center;color:var(--text3);padding:16px">Aucun historique</td></tr>';
+}
+function extGAV(id){const g=db.gavs.find(x=>x.id===id);if(g){g.rem+=86400;g.dur+=24;saveDB(db);renderGAVs();}}
+function closeGAV(id){
+  const g=db.gavs.find(x=>x.id===id);if(!g)return;
+  const issue=prompt('Issue de la GAV :','Libéré');
+  g.active=false;g.issue=issue||'Clôturée';
+  saveDB(db);renderGAVs();refreshStats();
+  addActivity('🔓 GAV clôturée — '+g.nom+' ('+g.issue+')');
+}
+function deleteGAVActive(id){if(!isChef())return;if(!confirm('Supprimer cette GAV active ?'))return;db.gavs=db.gavs.filter(x=>x.id!==id);saveDB(db);renderGAVs();refreshStats();addActivity('🗑️ GAV supprimée');}
+function deleteGAVHist(id){if(!isChef())return;if(!confirm('Supprimer cet historique GAV ?'))return;db.gavs=db.gavs.filter(x=>x.id!==id);saveDB(db);renderGAVs();}
+function tickGAVs(){let c=false;db.gavs.filter(g=>g.active).forEach(g=>{if(g.rem>0){g.rem--;c=true;}});if(c){saveDB(db);renderGAVs();}}
+
+// ── RAPPORTS ──────────────────────────────────────────────────────────────
+function createRapport(){
+  const r={id:ts(),type:document.getElementById('r-type').value,titre:document.getElementById('r-titre').value||'Sans titre',lieu:document.getElementById('r-lieu').value||'—',pers:document.getElementById('r-pers').value||'—',faits:document.getElementById('r-faits').value||'—',suite:document.getElementById('r-suite').value||'—',preuves:document.getElementById('r-preuves').value||'—',agent:currentUser.nom,date:today(),statut:'En cours'};
+  db.rapports.unshift(r);saveDB(db);cm('m-rapport');renderRapports();refreshStats();
+  addActivity('📋 Rapport créé — '+r.titre);
+}
+function renderRapports(){
+  const tbl=document.getElementById('rap-table');
+  if(!db.rapports.length){tbl.innerHTML='<tr><td colspan="7" style="text-align:center;color:var(--text3);padding:20px">Aucun rapport</td></tr>';return;}
+  tbl.innerHTML=db.rapports.map((r,i)=>{
+    const delBtn=isChef()?`<button class="btn btn-d btn-sm" onclick="deleteRapport(${r.id})">🗑️</button>`:'';
+    return`<tr><td style="font-family:'DM Mono',monospace;font-size:10px;color:var(--text3)">RAP-${String(db.rapports.length-i).padStart(3,'0')}</td><td><span class="bdg b-blue">${r.type}</span></td><td class="td-name">${r.titre}</td><td>${r.agent}</td><td>${r.date}</td><td><span class="bdg b-amber">${r.statut}</span></td><td style="display:flex;gap:4px;"><button class="btn btn-o btn-sm" onclick="viewRapport(${r.id})">👁️</button><button class="btn btn-s btn-sm" onclick="closeRapport(${r.id})">✅</button>${delBtn}</td></tr>`;
+  }).join('');
+}
+function viewRapport(id){
+  const r=db.rapports.find(x=>x.id===id);if(!r)return;
+  document.getElementById('rapport-view-c').innerHTML=`<div style="background:#fff;color:#111;border-radius:10px;padding:28px 32px;font-family:'Times New Roman',serif;font-size:13px;line-height:1.7;"><div style="text-align:center;border-bottom:2px solid #0a1628;padding-bottom:14px;margin-bottom:16px;"><div style="font-size:9px;text-transform:uppercase;letter-spacing:2px;color:#555;">République Française — Police Judiciaire — Vogaria</div><div style="font-size:16px;font-weight:bold;text-transform:uppercase;letter-spacing:2px;color:#0a1628;margin:6px 0 4px;">RAPPORT D'INTERVENTION</div><div style="font-size:11px;color:#888;">Réf. RAP-${r.id.toString().slice(-6)} · ${r.date}</div></div><div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;font-size:12px;margin-bottom:14px;"><div>Type : <b>${r.type}</b></div><div>Agent : <b>${r.agent}</b></div><div>Lieu : <b>${r.lieu}</b></div><div>Personnes : <b>${r.pers}</b></div></div><hr style="border-color:#ddd;margin:12px 0;"><p style="margin-bottom:10px;"><b>Objet :</b> ${r.titre}</p><p style="margin-bottom:10px;"><b>Déroulement des faits :</b><br>${r.faits}</p><p style="margin-bottom:10px;"><b>Suite donnée :</b><br>${r.suite}</p><p><b>Pièces et preuves :</b> ${r.preuves}</p><div style="margin-top:36px;display:flex;justify-content:space-between;font-size:11px;"><div style="width:120px;border-top:1px solid #333;padding-top:5px;text-align:center;">L'OPJ rédacteur</div><div style="width:120px;border-top:1px solid #333;padding-top:5px;text-align:center;">Le Responsable</div></div></div>`;
+  om('m-view-rapport');
+}
+function closeRapport(id){const r=db.rapports.find(x=>x.id===id);if(r){r.statut='Clôturé';saveDB(db);renderRapports();}}
+function deleteRapport(id){if(!isChef())return;if(!confirm('Supprimer ce rapport ?'))return;db.rapports=db.rapports.filter(x=>x.id!==id);saveDB(db);renderRapports();refreshStats();addActivity('🗑️ Rapport supprimé');}
+
+// ── PARQUET ──────────────────────────────────────────────────────────────
+function sendParquet(){
+  const nom=document.getElementById('p-nom').value;
+  if(!nom){alert('Indiquez le mis en cause.');return;}
+  db.parquet.unshift({id:ts(),nom,type:document.getElementById('p-type').value,qual:document.getElementById('p-qual').value,resume:document.getElementById('p-resume').value,date:today(),statut:'En attente'});
+  saveDB(db);renderParquet();
+  addActivity('⚖️ Parquet saisi — '+nom);
+  alert('✅ Dossier transmis au Procureur.');
+}
+function renderParquet(){
+  const tbl=document.getElementById('p-table');
+  const th=document.getElementById('p-del-th');
+  if(th)th.style.display=isChef()?'':'none';
+  if(!db.parquet.length){tbl.innerHTML='<tr><td colspan="5" style="text-align:center;color:var(--text3);padding:16px">Aucun dossier</td></tr>';return;}
+  tbl.innerHTML=db.parquet.map(p=>`<tr><td class="td-name">${p.nom}</td><td>${p.type}</td><td>${p.date}</td><td><span class="bdg b-amber">${p.statut}</span></td>${isChef()?`<td><button class="btn btn-d btn-sm" onclick="deleteParquet(${p.id})">🗑️</button></td>`:''}</tr>`).join('');
+}
+function deleteParquet(id){if(!isChef())return;if(!confirm('Supprimer ce dossier parquet ?'))return;db.parquet=db.parquet.filter(x=>x.id!==id);saveDB(db);renderParquet();addActivity('🗑️ Dossier parquet supprimé');}
+
+// ── PV ────────────────────────────────────────────────────────────────────
+function buildAmendesPV(){
+  const sel=document.getElementById('pv-infrac');
+  if(!sel)return;
+  sel.innerHTML='<option value="">— Sélectionner une infraction —</option>';
+  AMENDES.forEach((a,i)=>{
+    const opt=document.createElement('option');
+    opt.value=i;
+    opt.textContent=`[${a.q}] ${a.n}`;
+    sel.appendChild(opt);
+  });
+}
+function autofillPV(){
+  const idx=document.getElementById('pv-infrac').value;
+  if(idx==='')return;
+  const a=AMENDES[idx];
+  document.getElementById('pv-art').value=a.art;
+  document.getElementById('pv-montant').value=a.p||'';
+}
+function createPV(){
+  const nom=document.getElementById('pv-nom').value;
+  if(!nom){alert('Indiquez le contrevenant.');return;}
+  const idx=document.getElementById('pv-infrac').value;
+  const infrac=idx!==''?AMENDES[idx].n:(document.getElementById('pv-art').value||'Non précisé');
+  const art=document.getElementById('pv-art').value||'—';
+  const montant=parseFloat(document.getElementById('pv-montant').value)||0;
+  const lieu=document.getElementById('pv-lieu').value||'—';
+  const notes=document.getElementById('pv-notes').value||'';
+  db.pvs.unshift({id:ts(),nom,infrac,art,montant,lieu,notes,agent:currentUser.nom,date:today(),statut:'Non réglé'});
+  saveDB(db);cm('m-pv');renderPVs();refreshStats();
+  addActivity('📄 PV émis — '+nom+' ('+montant+'€)');
+}
+function renderPVs(){
+  const tbl=document.getElementById('pv-table');
+  if(!db.pvs.length){tbl.innerHTML='<tr><td colspan="9" style="text-align:center;color:var(--text3);padding:20px">Aucun PV émis</td></tr>';return;}
+  tbl.innerHTML=db.pvs.map((p,i)=>`<tr><td style="font-family:'DM Mono',monospace;font-size:10px;color:var(--text3)">PV-${String(db.pvs.length-i).padStart(4,'0')}</td><td class="td-name">${p.nom}</td><td>${p.infrac}</td><td style="font-family:'DM Mono',monospace;font-size:11px;color:var(--text3)">${p.art}</td><td style="font-family:'DM Mono',monospace;font-weight:700;color:var(--amber2)">${p.montant?p.montant+'€':'Juge'}</td><td>${p.agent}</td><td>${p.date}</td><td><span class="bdg ${p.statut==='Réglé'?'b-green':'b-red'}">${p.statut}</span></td><td style="display:flex;gap:4px;"><button class="btn btn-s btn-sm" onclick="pvPaid(${p.id})">✅</button>${isChef()?`<button class="btn btn-d btn-sm" onclick="deletePV(${p.id})">🗑️</button>`:''}</td></tr>`).join('');
+}
+function pvPaid(id){const p=db.pvs.find(x=>x.id===id);if(p){p.statut='Réglé';saveDB(db);renderPVs();}}
+function deletePV(id){if(!isChef())return;if(!confirm('Supprimer ce PV ?'))return;db.pvs=db.pvs.filter(x=>x.id!==id);saveDB(db);renderPVs();refreshStats();addActivity('🗑️ PV supprimé');}
+
+// ── CASIER ────────────────────────────────────────────────────────────────
+function addCasier(){
+  const nom=document.getElementById('c-nom').value||'Inconnu';
+  let cas=db.casiers.find(c=>c.nom.toLowerCase()===nom.toLowerCase());
+  if(!cas){cas={id:ts(),nom,ddn:document.getElementById('c-ddn').value,desc:document.getElementById('c-desc').value,entries:[]};db.casiers.unshift(cas);}
+  cas.entries.unshift({infrac:document.getElementById('c-infrac').value||'Non précisé',grav:document.getElementById('c-grav').value,peine:document.getElementById('c-peine').value,notes:document.getElementById('c-notes').value,date:today(),agent:currentUser.nom});
+  saveDB(db);cm('m-casier');renderCasier();refreshStats();
+  addActivity('🗂️ Casier mis à jour — '+nom);
+}
+function renderCasier(filter=''){
+  const el=document.getElementById('casier-list');
+  let list=db.casiers;
+  if(filter)list=list.filter(c=>c.nom.toLowerCase().includes(filter.toLowerCase()));
+  if(!list.length){el.innerHTML='<div class="alert a-i">Aucun casier trouvé.</div>';return;}
+  const gravC={grave:'var(--red2)',moyen:'var(--amber2)',leger:'var(--blue2)'};
+  el.innerHTML=list.map(c=>`<div class="casier-card"><div class="casier-head"><div><div class="casier-name">${c.nom}</div><div style="font-size:11px;color:var(--text2);margin-top:2px;">${c.ddn?'DDN: '+c.ddn+' · ':''} ${c.desc||''}</div></div><div style="display:flex;gap:6px;align-items:center;"><span class="bdg b-red">${c.entries.length} entrée(s)</span><button class="btn btn-o btn-sm" onclick="document.getElementById('c-nom').value='${c.nom.replace(/'/g,"\\'")}';om('m-casier')">➕</button>${isChef()?`<button class="btn btn-d btn-sm" onclick="deleteCasier(${c.id})">🗑️</button>`:''}</div></div>${c.entries.map(e=>`<div class="casier-entry ${e.grav}"><div style="display:flex;justify-content:space-between;"><span style="font-weight:600;color:${gravC[e.grav]||'#fff'};font-size:12px;">${e.infrac}</span><span style="font-size:10px;color:var(--text3)">${e.date} · ${e.agent}</span></div><div style="margin-top:3px;font-size:11px;">Peine : ${e.peine||'—'}</div>${e.notes?`<div style="margin-top:2px;font-size:10.5px;color:var(--text2)">${e.notes}</div>`:''}</div>`).join('')}</div>`).join('');
+}
+function searchCasier(){renderCasier(document.getElementById('casier-search').value);}
+function deleteCasier(id){if(!isChef())return;if(!confirm('Supprimer ce casier ?'))return;db.casiers=db.casiers.filter(x=>x.id!==id);saveDB(db);renderCasier();refreshStats();addActivity('🗑️ Casier supprimé');}
+
+// ── INCIDENTS ─────────────────────────────────────────────────────────────
+const INC_POS={'Liberty Way':{x:290,y:380},'Freedom Avenue':{x:380,y:340},'Independence Pkwy':{x:340,y:280},'Colonial Drive':{x:580,y:230},'Gibson Lane':{x:590,y:260},'Orchard Boulevard':{x:320,y:310},'Highway 55 Nord':{x:770,y:110},'Highway 55 Sud':{x:760,y:320},'Spring Creek Rd':{x:510,y:110},'Lakeview Court':{x:660,y:120}};
+const INC_COLORS={grave:'#ef4444',moyen:'#f59e0b',patrol:'#3b82f6',resolu:'#22c55e'};
+function addIncident(){
+  const lieu=document.getElementById('i-lieu').value;
+  const type=document.getElementById('i-type').value;
+  db.incidents.unshift({id:ts(),lieu,type,desc:document.getElementById('i-desc').value||'—',agent:document.getElementById('i-agent').value||currentUser.nom,heure:new Date().toLocaleTimeString('fr-FR'),statut:'Actif'});
+  saveDB(db);cm('m-incident');renderIncidents();
+  addActivity('📍 Incident — '+lieu+' ('+type+')');
+}
+function renderIncidents(){
+  const svgG=document.getElementById('svg-incidents');
+  if(svgG)svgG.innerHTML=db.incidents.filter(i=>i.statut==='Actif').map(inc=>{
+    const pos=INC_POS[inc.lieu]||{x:540,y:300};
+    const col=INC_COLORS[inc.type]||'#fff';
+    return`<g><circle cx="${pos.x}" cy="${pos.y}" r="16" fill="${col}" fill-opacity="0.15" stroke="${col}" stroke-width="1.5"><animate attributeName="r" values="16;22;16" dur="2s" repeatCount="indefinite"/></circle><circle cx="${pos.x}" cy="${pos.y}" r="6" fill="${col}" stroke="#fff" stroke-width="1.5"/><text x="${pos.x}" y="${pos.y-18}" text-anchor="middle" fill="${col}" font-size="11" font-family="DM Sans,sans-serif" font-weight="600">${inc.lieu.split(' ')[0]}</text></g>`;
+  }).join('');
+  const tbl=document.getElementById('inc-table');
+  const typeL={grave:'🔴 Grave',moyen:'🟡 Moyen',patrol:'🔵 Patrouille',resolu:'🟢 Résolu'};
+  if(!db.incidents.length){tbl.innerHTML='<tr><td colspan="6" style="text-align:center;color:var(--text3);padding:20px">Aucun incident</td></tr>';return;}
+  tbl.innerHTML=db.incidents.map(i=>`<tr><td class="td-name">${i.lieu}</td><td>${typeL[i.type]||i.type}</td><td>${i.agent}</td><td style="font-family:'DM Mono',monospace">${i.heure}</td><td><span class="bdg ${i.statut==='Actif'?'b-red':'b-green'}">${i.statut}</span></td><td style="display:flex;gap:4px;"><button class="btn btn-s btn-sm" onclick="resolveInc(${i.id})">✅</button><button class="btn btn-d btn-sm" onclick="removeInc(${i.id})">🗑️</button></td></tr>`).join('');
+}
+function resolveInc(id){const i=db.incidents.find(x=>x.id===id);if(i){i.statut='Résolu';i.type='resolu';saveDB(db);renderIncidents();}}
+function removeInc(id){db.incidents=db.incidents.filter(x=>x.id!==id);saveDB(db);renderIncidents();}
+function clearIncidents(){if(!confirm('Effacer tous les incidents ?'))return;db.incidents=[];saveDB(db);renderIncidents();}
+
+// ── AMENDES PAGE ─────────────────────────────────────────────────────────
+let amendeFilter='';
+let amendeFilterCat='';
+function buildAmendesPage(){
+  filterAmendes();
+}
+function filterAmendes(){
+  amendeFilter=document.getElementById('amende-q')?.value||'';
+  renderAmendesPage();
+}
+function filterAmendesCat(cat){
+  amendeFilterCat=cat;
+  // update button styles
+  document.querySelectorAll('.amende-filter-btns button').forEach(b=>b.style.cssText='');
+  const active=cat===''?'flt-all':cat==='Crime'?'flt-crime':cat==='Délit'?'flt-delit':'flt-contra';
+  const ab=document.getElementById(active);
+  if(ab)ab.style.cssText='background:var(--gold3);color:var(--gold2);border:1px solid rgba(201,168,76,0.3);';
+  renderAmendesPage();
+}
+function renderAmendesPage(){
+  const el=document.getElementById('amendes-list');
+  let list=AMENDES;
+  if(amendeFilterCat)list=list.filter(a=>a.q===amendeFilterCat);
+  if(amendeFilter)list=list.filter(a=>a.n.toLowerCase().includes(amendeFilter.toLowerCase())||a.art.toLowerCase().includes(amendeFilter.toLowerCase()));
+  if(!list.length){el.innerHTML='<div class="alert a-i">Aucune infraction trouvée.</div>';return;}
+  const qClass={Crime:'qual-crime',Délit:'qual-delit',Contravention:'qual-contra'};
+  el.innerHTML=list.map(a=>`<div class="amende-row"><div class="amende-name">${a.n}</div><span class="${qClass[a.q]||''}">${a.q}</span><div class="amende-art">${a.art}</div><div class="amende-prix ${a.p?'fixed':'juge'}">${a.p?a.p+'€':'Défini par un Juge'}</div></div>`).join('');
+}
+
+// ── AGENTS ────────────────────────────────────────────────────────────────
+function createAgent(){
+  if(!isChef()){alert('🔐 Accès refusé.');return;}
+  const nom=document.getElementById('a-nom').value.trim();
+  const pseudo=document.getElementById('a-pseudo').value.trim();
+  const role=document.getElementById('a-role').value;
+  const brigade=document.getElementById('a-brigade').value;
+  if(!nom||!pseudo){alert('Remplissez nom et pseudo.');return;}
+  const pfx={opj:'OPJ',lieutenant:'LT',capitaine:'CAP',commissaire:'COM',directeur:'DIR'};
+  const genId=()=>(pfx[role]||'AG')+'-'+String(db.agents.length+1).padStart(3,'0');
+  const genPw=()=>(pfx[role]||'AG')+'-'+Math.random().toString(36).slice(2,7).toUpperCase()+'!';
+  const id=document.getElementById('a-id').value.trim()||genId();
+  const pw=document.getElementById('a-pw').value.trim()||genPw();
+  if(db.agents.find(a=>a.id===id)){alert('Cet identifiant existe déjà.');return;}
+  const rColors={opj:'#64748b',lieutenant:'#3b82f6',capitaine:'#3b82f6',commissaire:'#8b5cf6',directeur:'#c9a84c'};
+  db.agents.push({id,pw,role,nom,pseudo,brigade,couleur:rColors[role]||'#334155',createdAt:now()});
+  saveDB(db);cm('m-add-agent');
+  ['a-nom','a-pseudo','a-id','a-pw'].forEach(x=>document.getElementById(x).value='');
+  renderAgents();refreshStats();
+  addActivity('➕ Agent créé — '+nom+' ('+id+')');
+  document.getElementById('creds-c').innerHTML=`<h3>🔑 Identifiants créés</h3><div class="alert a-s">✅ Compte créé avec succès !</div><div class="cred"><div class="cr"><span class="ck">Identifiant :</span><span class="cval">${id}</span></div><div class="cr"><span class="ck">Mot de passe :</span><span class="cval">${pw}</span></div><div class="cr"><span class="ck">Rôle :</span><span class="cval">${ROLES[role]?.label||role}</span></div><div class="cr"><span class="ck">Brigade :</span><span class="cval">${brigade}</span></div></div><div class="alert a-w" style="margin-top:12px;">⚠️ Notez ces identifiants — ils ne seront plus accessibles.</div>`;
+  om('m-creds');
+}
+function renderAgents(){
+  const el=document.getElementById('agents-list');
+  el.innerHTML=db.agents.map(a=>{
+    const gr=ROLES[a.role]||ROLES['opj'];
+    const ini=a.nom.split(' ').map(w=>w[0]).join('').slice(0,2).toUpperCase();
+    const delBtn=isChef()&&a.id!==currentUser.id?`<button class="btn btn-d btn-sm" onclick="removeAgent('${a.id}')">🗑️</button>`:'';
+    const credBtn=isChef()?`<button class="btn btn-o btn-sm" onclick="showAgentCreds('${a.id}')">🔑</button>`:'';
+    return`<div class="agent-card"><div class="agent-av" style="background:${a.couleur||gr.c}">${ini}</div><div style="flex:1;"><div style="font-size:13px;font-weight:500;">${a.nom}</div><div style="font-size:11px;color:var(--text2);">@${a.pseudo} · <span style="color:${gr.c}">${gr.label}</span> · ${a.brigade||'—'}</div><div style="font-family:'DM Mono',monospace;font-size:10px;color:var(--text3);margin-top:2px;">ID : ${a.id}</div></div><div style="display:flex;gap:5px;">${credBtn}${delBtn}</div></div>`;
+  }).join('');
+}
+function showAgentCreds(id){
+  const a=db.agents.find(x=>x.id===id);if(!a)return;
+  const gr=ROLES[a.role]||ROLES['opj'];
+  const ini=a.nom.split(' ').map(w=>w[0]).join('').slice(0,2).toUpperCase();
+  document.getElementById('creds-c').innerHTML=`<h3>🔑 Identifiants — ${a.nom}</h3><div style="display:flex;align-items:center;gap:12px;margin-bottom:16px;"><div class="agent-av" style="background:${a.couleur||gr.c};width:44px;height:44px;">${ini}</div><div><div style="font-size:15px;font-weight:600;">${a.nom}</div><div style="font-size:12px;color:var(--text2)">@${a.pseudo} · <span style="color:${gr.c}">${gr.label}</span></div></div></div><div class="cred"><div class="cr"><span class="ck">Identifiant :</span><span class="cval">${a.id}</span></div><div class="cr"><span class="ck">Mot de passe :</span><span class="cval">${a.pw}</span></div><div class="cr"><span class="ck">Brigade :</span><span class="cval">${a.brigade||'—'}</span></div><div class="cr"><span class="ck">Créé le :</span><span class="cval">${a.createdAt}</span></div></div>`;
+  om('m-creds');
+}
+function removeAgent(id){
+  if(!isChef())return;
+  if(!confirm('Supprimer ce compte agent ?'))return;
+  db.agents=db.agents.filter(a=>a.id!==id);
+  saveDB(db);renderAgents();refreshStats();
+  addActivity('🗑️ Agent supprimé — '+id);
+}
+
+// ── LOGS ──────────────────────────────────────────────────────────────────
+function renderLogs(){
+  const tbl=document.getElementById('logs-table');
+  if(!db.logs.length){tbl.innerHTML='<tr><td colspan="6" style="text-align:center;color:var(--text3);padding:20px">Aucun log</td></tr>';return;}
+  tbl.innerHTML=db.logs.map(l=>`<tr class="${l.result==='SUCCESS'?'log-success':'log-fail'}"><td style="font-family:'DM Mono',monospace;font-size:10px;">${l.ts}</td><td style="font-family:'DM Mono',monospace;">${l.id}</td><td>${l.nom}</td><td>${l.role}</td><td><span class="bdg ${l.result==='SUCCESS'?'b-green':'b-red'}">${l.result}</span></td><td style="font-family:'DM Mono',monospace;font-size:10px;">${l.ip}</td></tr>`).join('');
+}
+function clearLogs(){if(!confirm('Vider les logs ?'))return;db.logs=[];saveDB(db);renderLogs();document.getElementById('notif-dot').style.display='none';}
+
+// ── PROFIL ────────────────────────────────────────────────────────────────
+function renderProfil(){
+  if(!currentUser)return;
+  const r=ROLES[currentUser.role]||ROLES['opj'];
+  const ini=currentUser.nom.split(' ').map(w=>w[0]).join('').slice(0,2).toUpperCase();
+  document.getElementById('profil-c').innerHTML=`<div style="display:flex;align-items:center;gap:16px;margin-bottom:20px;"><div class="agent-av" style="background:${currentUser.couleur||r.c};width:56px;height:56px;font-size:16px;">${ini}</div><div><div style="font-size:18px;font-weight:600;">${currentUser.nom}</div><div style="font-size:13px;color:var(--text2)">@${currentUser.pseudo}</div><span class="bdg" style="background:${r.c}25;color:${r.c};margin-top:6px;display:inline-block">${r.label}</span></div></div><div class="cred"><div class="cr"><span class="ck">Identifiant :</span><span class="cval">${currentUser.id}</span></div><div class="cr"><span class="ck">Brigade :</span><span class="cval">${currentUser.brigade||'—'}</span></div><div class="cr"><span class="ck">Accès :</span><span class="cval" style="color:var(--gold2)">${r.access.toUpperCase()}</span></div><div class="cr"><span class="ck">Compte créé :</span><span class="cval">${currentUser.createdAt}</span></div></div><div style="margin-top:18px;border-top:1px solid var(--border);padding-top:16px;"><div style="font-size:12px;font-weight:600;color:var(--text);margin-bottom:12px;">🔑 Changer le mot de passe</div><div class="fg"><label>Nouveau mot de passe</label><input type="password" id="new-pw" placeholder="Minimum 4 caractères"></div><div class="fg"><label>Confirmer</label><input type="password" id="new-pw2" placeholder="Confirmer le mot de passe"></div><button class="btn btn-o" onclick="changePw()" style="width:100%;padding:10px;">Modifier</button></div>`;
+}
+function changePw(){
+  const np=document.getElementById('new-pw').value.trim();
+  const np2=document.getElementById('new-pw2').value.trim();
+  if(!np||np.length<4){alert('Mot de passe trop court (min. 4 caractères).');return;}
+  if(np!==np2){alert('Les mots de passe ne correspondent pas.');return;}
+  const agent=db.agents.find(a=>a.id===currentUser.id);
+  if(agent){agent.pw=np;saveDB(db);}
+  currentUser.pw=np;
+  saveSession(currentUser);
+  addActivity('🔑 Mot de passe modifié — '+currentUser.nom);
+  alert('✅ Mot de passe modifié avec succès !');
+  renderProfil();
+}
+
+// ── KEYBOARD ──────────────────────────────────────────────────────────────
+document.addEventListener('DOMContentLoaded',()=>{
+  renderSavedCreds();
+  if(!tryAutoLogin()){
+    // page loaded, not logged in
+  }
+});
+document.getElementById('l-pw').addEventListener('keydown',e=>{if(e.key==='Enter')doLogin();});
+document.getElementById('l-id').addEventListener('keydown',e=>{if(e.key==='Enter')document.getElementById('l-pw').focus();});
+</script>
+</body>
+</html>
